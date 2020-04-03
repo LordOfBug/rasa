@@ -58,6 +58,10 @@ prepare-wget-macos:
 prepare-tests-ubuntu: prepare-tests-files
 	sudo apt-get -y install graphviz graphviz-dev python3-tk
 
+prepare-tests-centos: prepare-tests-files
+	sudo yum -y gcc gcc-c++ python3-devel
+	sudo yum -y install graphviz graphviz-devel python3-tkinter 
+
 prepare-tests-files:
 	pip3 install https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.1.0/en_core_web_md-2.1.0.tar.gz#egg=en_core_web_md==2.1.0 --no-cache-dir -q
 	python3 -m spacy link en_core_web_md en --force
@@ -67,7 +71,7 @@ prepare-tests-files:
 
 test: clean
 	# OMP_NUM_THREADS can improve overral performance using one thread by process (on tensorflow), avoiding overload
-	OMP_NUM_THREADS=1 pytest tests -n $(JOBS) --cov rasa
+	OMP_NUM_THREADS=1 python3 -m pytest tests -n $(JOBS) --cov rasa
 
 doctest: clean
 	cd docs && make doctest

@@ -10,4 +10,4 @@
 # ConveRT Requirements
 -r requirements_pretrained_embeddings_convert.txt
 
-jieba==0.39
+jieba==0.42.1
