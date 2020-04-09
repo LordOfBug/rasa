@@ -1,11 +1,11 @@
 import hashlib
 import hmac
-import warnings
 import logging
 from fbmessenger import MessengerClient
 from fbmessenger.attachments import Image
 from fbmessenger.elements import Text as FBText
 from fbmessenger.quick_replies import QuickReplies, QuickReply
+from rasa.utils.common import raise_warning
 from sanic import Blueprint, response
 from sanic.request import Request
 from typing import Text, List, Dict, Any, Callable, Awaitable, Iterable, Optional
@@ -148,7 +148,7 @@ class MessengerBot(OutputChannel):
     ) -> None:
         """Send a message through this channel."""
 
-        for message_part in text.split("\n\n"):
+        for message_part in text.strip().split("\n\n"):
             self.send(recipient_id, FBText(text=message_part))
 
     async def send_image_url(
@@ -169,7 +169,7 @@ class MessengerBot(OutputChannel):
 
         # buttons is a list of tuples: [(option_name,payload)]
         if len(buttons) > 3:
-            warnings.warn(
+            raise_warning(
                 "Facebook API currently allows only up to 3 buttons. "
                 "If you add more, all will be ignored."
             )

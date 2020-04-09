@@ -21,6 +21,7 @@ def test_x_help(run: Callable[..., RunResult]):
               [--config-endpoint CONFIG_ENDPOINT] [--log-file LOG_FILE]
               [--endpoints ENDPOINTS] [-p PORT] [-t AUTH_TOKEN]
               [--cors [CORS [CORS ...]]] [--enable-api]
+              [--response-timeout RESPONSE_TIMEOUT]
               [--remote-storage REMOTE_STORAGE]
               [--ssl-certificate SSL_CERTIFICATE] [--ssl-keyfile SSL_KEYFILE]
               [--ssl-ca-file SSL_CA_FILE] [--ssl-password SSL_PASSWORD]
@@ -148,7 +149,5 @@ async def test_pull_runtime_config_from_server():
             config_url, 1, 0
         )
 
-        with open(endpoints_path) as f:
-            assert f.read() == endpoint_config
-        with open(credentials_path) as f:
-            assert f.read() == credentials
+        assert io_utils.read_file(endpoints_path) == endpoint_config
+        assert io_utils.read_file(credentials_path) == credentials

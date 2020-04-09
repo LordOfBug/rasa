@@ -52,9 +52,21 @@ class TwilioOutput(Client, OutputChannel):
         """Sends text message"""
 
         message_data = {"to": recipient_id, "from_": self.twilio_number}
-        for message_part in text.split("\n\n"):
+        for message_part in text.strip().split("\n\n"):
             message_data.update({"body": message_part})
             await self._send_message(message_data)
+
+    async def send_image_url(
+        self, recipient_id: Text, image: Text, **kwargs: Any
+    ) -> None:
+        """Sends an image."""
+
+        message_data = {
+            "to": recipient_id,
+            "from_": self.twilio_number,
+            "media_url": [image],
+        }
+        await self._send_message(message_data)
 
     async def send_custom_json(
         self, recipient_id: Text, json_message: Dict[Text, Any], **kwargs: Any
@@ -65,7 +77,7 @@ class TwilioOutput(Client, OutputChannel):
         if not json_message.get("media_url"):
             json_message.setdefault("body", "")
         if not json_message.get("messaging_service_sid"):
-            json_message.setdefault("from", self.twilio_number)
+            json_message.setdefault("from_", self.twilio_number)
 
         await self._send_message(json_message)
 
