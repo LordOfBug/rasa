@@ -59,13 +59,14 @@ prepare-tests-ubuntu: prepare-tests-files
 	sudo apt-get -y install graphviz graphviz-dev python3-tk
 
 prepare-tests-centos: prepare-tests-files
-	sudo yum -y gcc gcc-c++ python3-devel
+	sudo yum -y install gcc gcc-c++ python3-devel
 	sudo yum -y install graphviz graphviz-devel python3-tkinter 
 
 prepare-tests-files:
-	pip3 install https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.1.0/en_core_web_md-2.1.0.tar.gz#egg=en_core_web_md==2.1.0 --no-cache-dir -q
+	python3 -m pip install pytest pytype
+	python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.1.0/en_core_web_md-2.1.0.tar.gz#egg=en_core_web_md==2.1.0 --no-cache-dir -q
 	python3 -m spacy link en_core_web_md en --force
-	pip3 install https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.1.0/de_core_news_sm-2.1.0.tar.gz#egg=de_core_news_sm==2.1.0 --no-cache-dir -q
+	python3 -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.1.0/de_core_news_sm-2.1.0.tar.gz#egg=de_core_news_sm==2.1.0 --no-cache-dir -q
 	python3 -m spacy link de_core_news_sm de --force
 	wget --progress=dot:giga -N -P data/ https://s3-eu-west-1.amazonaws.com/mitie/total_word_feature_extractor.dat
 
