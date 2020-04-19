@@ -1,5 +1,18 @@
 # Create common base stage
-FROM centos:7 as base
+# Same as our Base
+# FROM centos:7 as base
+FROM centos:centos7.3.1611 as base
+
+ADD ntpd.conf /etc/ntpd.conf
+
+RUN yum install -y wget supervisor dnsutils which net-tools telnet ntp ntpdate python-setuptools nc && \
+    easy_install supervisor && \
+    mkdir -p /etc/supervisor/conf.d && \
+    echo_supervisord_conf > /etc/supervisor/supervisord.conf && \
+    echo "[include]" >> /etc/supervisor/supervisord.conf && \
+    echo "files=conf.d/*.conf" >> /etc/supervisor/supervisord.conf && \
+    systemctl enable ntpd && \
+    yum clean all
 
 #FROM centos/python-36-centos7 as base
 # Chinese support
@@ -114,6 +127,9 @@ RUN python3.6 -m venv /opt/venv && \
 
 # upgrade jieba to latest version
 RUN python3.6 -m pip install -U "jieba==0.42.1"
+
+# required according to ED
+RUN python3.6 -m pip install sentence-transformers
 
 # make sure we use the virtualenv
 ENV PATH="/opt/venv/bin:$PATH"
